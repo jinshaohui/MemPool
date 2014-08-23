@@ -1,0 +1,54 @@
+Memory pool design and implementation of the reference:
+http://www.ibm.com/developerworks/cn/linux/l-cn-ppp/index6.html
+
+
+Memory Pool api 
+
+1、cldMemPool * _cldMemPool_init(int nUnitSize,int nInitNum,int nGrowNum);
+	describe:
+         Create a memory Pool and init it
+  	param:
+         nUnitSize : allocation unit of Memory blocks size
+         nInitNum : init allocation unit of Memory blocks num
+         nGrowNum:  grow allocation unit of Memory blocks num
+ 	return:
+         NULL:  failed,  param error or malloc failed;
+         other: sucessful,return cldMemPool pointer;
+    
+ 2、   void _cldMemPool_exit(cldMemPool *pMemPool);
+	describe
+         free memory block add memory pool
+  	param:
+         pMemPool : memory Pool pointer
+
+         
+ 3、   void * _cldMem_malloc(cldMemPool * pMemPool);
+	describe:
+         Traverse the memory pool memory blocks, find unused memory unit.If the memory 
+         unit is not found, malloc a new  memory block, and added to the 
+         memory pool memory block list of the first node
+  	param:
+         pMemPool : memory Pool pointer
+  	return:
+         NULL: failed.
+         other:sucessful, return a pointer to the malloc memory 
+
+         
+ 4、   int cldMem_free(cldMemPool * pMemPool,void * pFree);
+	describe:
+         Recycling memory allocation unit. when Recycling, if the current memory 
+         block is free state (memory units are not allocated) and number of
+         memory blocks is greater than 1, free memory brock.If memory pool
+         first node has full distribution of the current memory blocks to the first node
+    param:
+         pMemPool : memory Pool pointer
+    return:
+         -1: failed.
+         0:sucessful, return a pointer to the malloc memory 
+
+ 5、 Used for testing, print memory pool, or memory blocks  information
+
+    void print_MemoryBlockInfoByPointer(cldMemPool *pMemPool, void *ptr);
+
+    void Print_MemoryPool_INFO(cldMemPool *pMemPool);
+
